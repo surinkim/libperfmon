@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libperfmon", "libperfmon\libperfmon.vcxproj", "{5206B416-D99F-4A38-890B-8D97C70C3DBB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testlibperfmon", "Testlibperfmon\Testlibperfmon.vcxproj", "{47C72F60-643A-420C-8837-02A4688FF409}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5206B416-D99F-4A38-890B-8D97C70C3DBB} = {5206B416-D99F-4A38-890B-8D97C70C3DBB}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5206B416-D99F-4A38-890B-8D97C70C3DBB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5206B416-D99F-4A38-890B-8D97C70C3DBB}.Debug|Win32.Build.0 = Debug|Win32
+		{5206B416-D99F-4A38-890B-8D97C70C3DBB}.Release|Win32.ActiveCfg = Release|Win32
+		{5206B416-D99F-4A38-890B-8D97C70C3DBB}.Release|Win32.Build.0 = Release|Win32
+		{47C72F60-643A-420C-8837-02A4688FF409}.Debug|Win32.ActiveCfg = Debug|Win32
+		{47C72F60-643A-420C-8837-02A4688FF409}.Debug|Win32.Build.0 = Debug|Win32
+		{47C72F60-643A-420C-8837-02A4688FF409}.Release|Win32.ActiveCfg = Release|Win32
+		{47C72F60-643A-420C-8837-02A4688FF409}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
