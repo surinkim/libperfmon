@@ -46,6 +46,11 @@ bool PerfmonWrapper::Init(const WCHAR* process_name, const WCHAR* log_name)
 	return true;
 }
 
+void PerfmonWrapper::SetWriteLogErrorCallback(WRITE_LOG_ERROR_CALLBACK func)
+{
+	error_call_back_ = func;
+}
+
 bool PerfmonWrapper::Start()
 {
 	if(!_OpenQuery())
@@ -203,7 +208,7 @@ const wstring PerfmonWrapper::_GetLogFileName()
 	return log_name_ + L"_" + _GetCurrentDate() + file_ext;
 }
 
-unsigned int _stdcall InfinityThread(void *arg) 
+unsigned int CALLBACK WriteLog(void *arg) 
 {
 	if(arg == nullptr) { return 0; }
 
@@ -211,15 +216,27 @@ unsigned int _stdcall InfinityThread(void *arg)
 	while(true)
 	{
 		//Collects counter data for the current query and writes the data to the log file.
-		PDH_STATUS  pdh_status = PdhUpdateLog (args->log_, nullptr);
+		PDH_STATUS  pdh_status = PdhUpdateLog (NULL/*args->log_*/, nullptr);
 		cout << "update log" << endl;
 		if (ERROR_SUCCESS != pdh_status)
 		{
-			wprintf(L"PdhUpdateLog failed with 0x%x\n", pdh_status);
-			//error_ = ERROR_UPDATE_LOG_FAIL;
-			//return false;
+			//wprintf(L"PdhUpdateLog failed with 0x%x\n", pdh_status);
 
-			//args->error_info_ = ErrorInfo(ERROR_UPDATE_LOG_FAIL);
+			args->error_info_ = ErrorInfo(ERROR_CREATE_THREAD_FAIL, pdh_status);
+
+			//////////////////////////////////////////////////////////////////////////
+			//to do
+			wostringstream ostream;
+			ostream << endl << "Error!!" << endl;
+			ostream << "libperfmon Error Code - " << args->error_info_.error_code_ << endl;
+
+			if(args->error_info_.pdh_status_ != 0)
+			{
+				ostream	<< "PDH Error Code - Ox" << hex << args->error_info_.pdh_status_ << endl;
+			}
+			//////////////////////////////////////////////////////////////////////////
+
+			args->error_call_back_(ostream.str());
 			return 0;
 		}
 
@@ -235,8 +252,9 @@ bool PerfmonWrapper::_UpdateLog()
 
 	args_.log_ = log_;
 	args_.error_info_ = error_info_;
+	args_.error_call_back_ = error_call_back_;
 
-	handle_ = (HANDLE)_beginthreadex(nullptr, 0, &InfinityThread, &args_, 0, &thread_id);
+	handle_ = (HANDLE)_beginthreadex(nullptr, 0, &WriteLog, &args_, 0, &thread_id);
 	if(handle_ == 0)
 	{
 		error_info_ = ErrorInfo(ERROR_CREATE_THREAD_FAIL);

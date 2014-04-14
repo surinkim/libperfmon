@@ -1,12 +1,8 @@
 #pragma once
 
-#include <string>
-
 #include "CommonType.h"
 
 #pragma comment(lib, "pdh.lib")
-
-using namespace std;
 
 namespace libperfmon
 {
@@ -18,6 +14,7 @@ public:
 	~PerfmonWrapper(void);
 
 	bool Init(const WCHAR* process_name, const WCHAR* log_name = L"performance");
+	void SetWriteLogErrorCallback(WRITE_LOG_ERROR_CALLBACK func);
 	bool Start();
 	bool Stop();
 	const ErrorInfo GetErrorInfo() const;
@@ -47,6 +44,7 @@ private:
 	HANDLE			handle_;
 	ErrorInfo		error_info_;
 	ThreadArguments args_;
+	WRITE_LOG_ERROR_CALLBACK error_call_back_;
 };
 
 }

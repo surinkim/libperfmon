@@ -3,9 +3,20 @@
 #include <Windows.h>
 #include <pdh.h>
 #include <pdhmsg.h>
+#include <string>
+
+using namespace std;
 
 namespace libperfmon
 {
+
+typedef void (CALLBACK *WRITE_LOG_ERROR_CALLBACK)(
+	/*__inout     PTP_CALLBACK_INSTANCE Instance,
+	__inout_opt PVOID                 Context,
+	__inout     PTP_WORK              Work*/
+
+	const wstring error_msg
+	);
 
 enum ErrorCode
 {
@@ -37,6 +48,7 @@ struct ThreadArguments
 
 	HLOG		log_;
 	ErrorInfo	error_info_;
+	WRITE_LOG_ERROR_CALLBACK error_call_back_;
 };
 
 }

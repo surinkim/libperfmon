@@ -1,8 +1,6 @@
 // Testlibperfmon.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
-
 #include <iostream>
 #include "PerfmonWrapper.h"
 
@@ -11,10 +9,16 @@
 using namespace std;
 using namespace libperfmon;
 
+PerfmonWrapper wrapper;
+void CALLBACK WriteLogErrorCallback(const wstring error_msg)
+{
+	wcout << L"ERROR!! libperfmon write log " << endl;
+	wcout << error_msg.c_str() << endl;
+}
+
 int wmain(int argc, WCHAR* argv[])
 {
 	//PerfmonWrapper init
-	PerfmonWrapper wrapper;
 	if(!wrapper.Init(L"Testlibperfmon"))
 	{
 		wcout << wrapper.GetErrorString().c_str() << endl;
@@ -22,6 +26,9 @@ int wmain(int argc, WCHAR* argv[])
 		return -1;
 	}
 	wcout << L"init ok" << endl;
+
+	//Set WriteLogErrorCallback
+	wrapper.SetWriteLogErrorCallback(WriteLogErrorCallback);
 
 	//start writing performance log
 	if(!wrapper.Start())
