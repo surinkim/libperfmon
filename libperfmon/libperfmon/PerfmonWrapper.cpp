@@ -216,27 +216,13 @@ unsigned int CALLBACK WriteLog(void *arg)
 	while(true)
 	{
 		//Collects counter data for the current query and writes the data to the log file.
-		PDH_STATUS  pdh_status = PdhUpdateLog (NULL/*args->log_*/, nullptr);
+		PDH_STATUS  pdh_status = PdhUpdateLog (args->log_, nullptr);
 		cout << "update log" << endl;
 		if (ERROR_SUCCESS != pdh_status)
 		{
-			//wprintf(L"PdhUpdateLog failed with 0x%x\n", pdh_status);
-
 			args->error_info_ = ErrorInfo(ERROR_CREATE_THREAD_FAIL, pdh_status);
+			args->error_callback_(args->get_error_string_callback_());
 
-			//////////////////////////////////////////////////////////////////////////
-			//to do
-			wostringstream ostream;
-			ostream << endl << "Error!!" << endl;
-			ostream << "libperfmon Error Code - " << args->error_info_.error_code_ << endl;
-
-			if(args->error_info_.pdh_status_ != 0)
-			{
-				ostream	<< "PDH Error Code - Ox" << hex << args->error_info_.pdh_status_ << endl;
-			}
-			//////////////////////////////////////////////////////////////////////////
-
-			args->error_call_back_(ostream.str());
 			return 0;
 		}
 
@@ -250,9 +236,10 @@ bool PerfmonWrapper::_UpdateLog()
 {
 	unsigned int thread_id = 0;
 
-	args_.log_ = log_;
-	args_.error_info_ = error_info_;
-	args_.error_call_back_ = error_call_back_;
+	args_.log_						= log_;
+	args_.error_info_				= error_info_;
+	args_.get_error_string_callback_= std::bind(&PerfmonWrapper::GetErrorString, this);
+	args_.error_callback_			= error_call_back_;
 
 	handle_ = (HANDLE)_beginthreadex(nullptr, 0, &WriteLog, &args_, 0, &thread_id);
 	if(handle_ == 0)

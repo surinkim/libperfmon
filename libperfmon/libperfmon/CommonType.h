@@ -4,19 +4,15 @@
 #include <pdh.h>
 #include <pdhmsg.h>
 #include <string>
+#include <functional>
 
 using namespace std;
 
 namespace libperfmon
 {
 
-typedef void (CALLBACK *WRITE_LOG_ERROR_CALLBACK)(
-	/*__inout     PTP_CALLBACK_INSTANCE Instance,
-	__inout_opt PVOID                 Context,
-	__inout     PTP_WORK              Work*/
-
-	const wstring error_msg
-	);
+typedef void (CALLBACK *WRITE_LOG_ERROR_CALLBACK)(const wstring error_msg);
+typedef std::function<const wstring()> GET_ERROR_STRING_CALLBACK;
 
 enum ErrorCode
 {
@@ -43,12 +39,14 @@ struct ErrorInfo
 
 struct ThreadArguments
 {
-	ThreadArguments(const HLOG log, const ErrorInfo error_info) 
+	ThreadArguments(HLOG& log, ErrorInfo& error_info) 
 		: log_(log), error_info_(error_info) {}
 
-	HLOG		log_;
-	ErrorInfo	error_info_;
-	WRITE_LOG_ERROR_CALLBACK error_call_back_;
+	HLOG&						log_;
+	ErrorInfo&					error_info_;
+
+	GET_ERROR_STRING_CALLBACK	get_error_string_callback_;
+	WRITE_LOG_ERROR_CALLBACK	error_callback_;
 };
 
 }
