@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "CommonType.h"
 
 #pragma comment(lib, "pdh.lib")
@@ -23,7 +25,8 @@ public:
 private:
 	bool _GetInitValue(const WCHAR* process_name, const WCHAR* log_name);
 	bool _OpenQuery();
-	bool _AddCounters(const wstring counter_category);
+	bool _ReadCounterConfigFile(vector<wstring>& counters);
+	bool _AddCounters(const vector<wstring>& counters, const wstring counter_category);
 	bool _AddCounter(const WCHAR* counter_path);
 	bool _OpenLog();
 	bool _UpdateLog();

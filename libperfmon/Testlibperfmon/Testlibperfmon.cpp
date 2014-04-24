@@ -74,6 +74,12 @@ wstring GetProcessName(WCHAR* first_argv)
 	while ((pos = s.find(delimiter)) != std::wstring::npos) {
 		s.erase(0, pos + delimiter.length());
 	}
+
+	//remove of '.exe'
+	delimiter = L".";
+	pos = s.find(delimiter);
+	s.erase(pos, s.length() - pos);
+
 	return s;
 }
 

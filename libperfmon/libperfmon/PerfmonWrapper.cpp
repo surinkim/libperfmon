@@ -3,6 +3,9 @@
 #include <ctime>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <iterator>
+#include <algorithm>
 #include <process.h>
 
 using namespace std;
@@ -58,7 +61,13 @@ bool PerfmonWrapper::Start()
 		return false;
 	}
 
-	if(!_AddCounters(_GetCounterCategory()))
+	vector<wstring> counters;
+	if(!_ReadCounterConfigFile(counters))
+	{
+		return false;
+	}
+
+	if(!_AddCounters(counters, _GetCounterCategory()))
 	{
 		return false;
 	}
@@ -135,22 +144,36 @@ bool PerfmonWrapper::_OpenQuery()
 	return true;
 }
 
-bool PerfmonWrapper::_AddCounters(const wstring counter_category)
+bool PerfmonWrapper::_ReadCounterConfigFile(vector<wstring>& counters)
+{
+	wifstream counter_config(L"CounterConfig.txt");
+	if(!counter_config.is_open())
+	{
+		error_info_ = ErrorInfo(ERROR_NO_COUNTER_CONFIG_FILE);
+		return false; 
+	}
+
+	std::wstring line;
+	while(getline(counter_config, line))
+	{
+		counters.push_back(line);
+	}
+
+	return true;
+}
+
+bool PerfmonWrapper::_AddCounters(const vector<wstring>& counters, const wstring counter_category)
 {
 	//Add Counters
-	wstring counter_path_arr[] = {L"\\% Processor Time"
-								, L"\\% User Time"
-								, L"\\% Privileged Time"
-								, L"\\Thread Count"};
-	for (int i = 0; i < _countof(counter_path_arr); i++)
+	for(auto iter = counters.begin(); iter != counters.end(); iter++)
 	{
-		wstring counter_path = counter_category + counter_path_arr[i];
+		wstring counter_path = counter_category + L"\\" + *iter;
 		if(!_AddCounter(counter_path.c_str()))
 		{
 			return false;
 		}
 	}
-
+	
 	return true;
 }
 
@@ -174,7 +197,6 @@ bool PerfmonWrapper::_OpenLog()
 		, &log_type_, query_, 0, nullptr, &log_);
 	if (pdh_status_ != ERROR_SUCCESS)
 	{
-		//wprintf(L"PdhOpenLog failed with 0x%x\n", pdh_status_);
 		error_info_ = ErrorInfo(ERROR_OPEN_LOG_FAIL);
 		return false;
 	}
