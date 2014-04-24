@@ -9,17 +9,17 @@
 using namespace std;
 using namespace libperfmon;
 
-PerfmonWrapper wrapper;
-void CALLBACK WriteLogErrorCallback(const wstring error_msg)
-{
-	wcout << L"ERROR!! libperfmon write log " << endl;
-	wcout << error_msg.c_str() << endl;
-}
+wstring GetProcessName(WCHAR* first_argv);
+void CALLBACK WriteLogErrorCallback(const wstring error_msg);
 
 int wmain(int argc, WCHAR* argv[])
 {
+	//Get process name
+	wstring process_name = GetProcessName(argv[0]);
+
 	//PerfmonWrapper init
-	if(!wrapper.Init(L"Testlibperfmon"))
+	PerfmonWrapper wrapper;
+	if(!wrapper.Init(process_name.c_str()))
 	{
 		wcout << wrapper.GetErrorString().c_str() << endl;
 		getchar();
@@ -59,3 +59,26 @@ int wmain(int argc, WCHAR* argv[])
 	return 0;
 }
 
+wstring GetProcessName(WCHAR* first_argv)
+{
+	if(first_argv == nullptr)
+	{
+		return false;
+	}
+
+	wstring s(first_argv);
+	wstring delimiter = L"\\";
+
+	size_t pos = 0;
+	wstring token;
+	while ((pos = s.find(delimiter)) != std::wstring::npos) {
+		s.erase(0, pos + delimiter.length());
+	}
+	return s;
+}
+
+void CALLBACK WriteLogErrorCallback(const wstring error_msg)
+{
+	wcout << L"ERROR!! libperfmon write log " << endl;
+	wcout << error_msg.c_str() << endl;
+}

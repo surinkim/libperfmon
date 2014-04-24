@@ -16,7 +16,7 @@ typedef std::function<const wstring()> GET_ERROR_STRING_CALLBACK;
 
 enum ErrorCode
 {
-	ERROR_NONE,
+	ERROR_NONE = 0,
 	ERROR_INVALID_INIT_VALUE,
 	ERROR_OPEN_QUERY_FAIL,
 	ERROR_ADD_COUNT_FAIL,

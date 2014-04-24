@@ -116,6 +116,9 @@ bool PerfmonWrapper::_GetInitValue(const WCHAR* process_name, const WCHAR* log_n
 	process_name_	= process_name;
 	log_name_		= log_name;
 
+	wcout << L"Process Name : " << process_name_ << endl;
+	wcout << L"Log Name : " << log_name_ << endl;
+
 	return true;
 }
 
