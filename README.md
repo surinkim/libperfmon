@@ -62,7 +62,7 @@ int wmain(int argc, WCHAR* argv[])
 
 ```
 
-Current version can only support related in 'process' category.
+Current version supports related in 'process' category only.
 
 References
 ====================
