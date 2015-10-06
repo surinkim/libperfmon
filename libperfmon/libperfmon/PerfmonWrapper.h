@@ -1,9 +1,7 @@
 #pragma once
 
 #include <vector>
-
 #include "CommonType.h"
-
 #pragma comment(lib, "pdh.lib")
 
 namespace libperfmon
