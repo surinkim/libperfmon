@@ -3,6 +3,9 @@
 *.lo
 *.o
 *.obj
+*.pdb
+*.db
+*.opendb
 
 # Compiled Dynamic libraries
 *.so
@@ -19,3 +22,11 @@
 *.exe
 *.out
 *.app
+
+# blg
+*.blg
+
+# build
+Debug/
+Release/
+.vs/
