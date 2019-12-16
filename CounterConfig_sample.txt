@@ -1,0 +1,11 @@
+\Process(devenv)\% Processor Time
+\Process(devenv)\Page Faults/sec
+\Process(devenv)\IO Data Bytes/sec
+\Process(devenv)\Working Set
+\Process(devenv)\Thread Count
+\Process(devenv)\Private Bytes
+\Process(devenv)\Page File Bytes
+\Process(devenv)\% Privileged Time
+\Process(devenv)\% Processor Time
+\Process(devenv)\% User Time
+\Process(devenv)\Handle Count
