@@ -39,12 +39,11 @@ int wmain(int argc, WCHAR* argv[])
 	}
 	wcout << L"start ok" << endl;
 
-	//do something long work for test
-	for(int i = 0; i < 10000; i++)
-	{
-		int j = i / 2371;
-		Sleep(100);
-	}
+	//do something long work for counter collecting
+    for (int i = 0; i < 10000000; i++)
+    {
+        Sleep(1000);
+    }
 
 	//stop writing performance log
 	if(!wrapper.Stop())

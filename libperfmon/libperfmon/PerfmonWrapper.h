@@ -25,6 +25,7 @@ private:
 	bool _OpenQuery();
 	bool _ReadCounterConfigFile(vector<wstring>& counters);
 	bool _AddCounters(const vector<wstring>& counters, const wstring counter_category);
+    bool _AddFixedCounters(const vector<wstring>& counters);
 	bool _AddCounter(const WCHAR* counter_path);
 	bool _OpenLog();
 	bool _UpdateLog();

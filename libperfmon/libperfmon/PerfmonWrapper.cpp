@@ -67,10 +67,15 @@ bool PerfmonWrapper::Start()
 		return false;
 	}
 
-	if(!_AddCounters(counters, _GetCounterCategory()))
+	/*if(!_AddCounters(counters, _GetCounterCategory()))
 	{
 		return false;
-	}
+	}*/
+
+    if (!_AddFixedCounters(counters))
+    {
+        return false;
+    }
 
 	if(!_OpenLog())
 	{
@@ -175,6 +180,20 @@ bool PerfmonWrapper::_AddCounters(const vector<wstring>& counters, const wstring
 	}
 	
 	return true;
+}
+
+bool PerfmonWrapper::_AddFixedCounters(const vector<wstring>& counters)
+{
+    //Add fixed counters
+    for (auto iter = counters.begin(); iter != counters.end(); iter++)
+    {
+        wstring counter_path = *iter;
+        if (!_AddCounter(counter_path.c_str()))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool PerfmonWrapper::_AddCounter(const WCHAR* counter_path)
